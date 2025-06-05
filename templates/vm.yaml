@@ -1,0 +1,66 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: ${vm_name}
+  namespace: ${vm_namespace}
+  labels:
+    app: ${vm_name}
+spec:
+  runStrategy: Always
+  dataVolumeTemplates:
+  - metadata:
+      name: ${vm_name}-rootdisk
+    spec:
+      sourceRef:
+        kind: DataSource
+        name: ${base_image_name}
+        namespace: ${base_image_namespace}
+      storage:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: "${root_disk_size}"
+        storageClassName: ${storage_class}
+  template:
+    metadata:
+      labels:
+        kubevirt.io/vm: ${vm_name}
+    spec:
+      domain:
+        cpu:
+          cores: ${cpu_cores}
+          sockets: ${cpu_sockets}
+          model: ${cpu_model}
+          threads: ${cpu_threads}
+        devices:
+          disks:
+          - name: rootdisk
+            disk:
+              bus: virtio
+          - name: cloudinitdisk
+            disk:
+              bus: virtio
+          interfaces:
+            - name: default
+              model: ${interface_model}
+              ${interface_type}: {}
+        resources:
+          requests:
+            memory: ${memory_size}
+      evictionStrategy: LiveMigrateIfPossible
+      networks:
+        - multus:
+            networkName: ${network_name}
+          name: default
+      terminationGracePeriodSeconds: 180
+      volumes:
+      - name: rootdisk
+        dataVolume:
+          name: ${vm_name}-rootdisk
+      - name: cloudinitdisk
+        cloudInitNoCloud:
+          networkData: |
+            ${network_data}
+          userData: |
+            ${user_data}
