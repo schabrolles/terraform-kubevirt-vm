@@ -1,12 +1,12 @@
 data "kubernetes_resource" "vmi_status" {
   api_version = "kubevirt.io/v1"
   kind        = "VirtualMachineInstance"
-  
+
   metadata {
     name      = var.vm_name
     namespace = var.vm_namespace
   }
-  
+
   depends_on = [
     null_resource.wait_for_vmi_IP
   ]

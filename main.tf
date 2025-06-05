@@ -34,7 +34,7 @@ packages:
 runcmd:
   - echo "VM setup completed" > /var/log/vm-setup.log
 EOF
-  
+
   # Network data for cloud-init configuration
   network_data = var.custom_network_data != "" ? var.custom_network_data : <<-EOF
 version: 2
@@ -55,7 +55,7 @@ EOF
 resource "kubectl_manifest" "kubevirt_vm" {
   wait_for {
     field {
-      key = "status.ready"
+      key   = "status.ready"
       value = "true"
     }
   }
@@ -89,8 +89,8 @@ resource "kubectl_manifest" "kubevirt_vm" {
     custom_network_data     = var.custom_network_data
     vm_labels               = var.vm_labels
     storage_class           = var.storage_class
-    user_data               = indent(12,local.user_data)
-    network_data            = indent(12,local.network_data)
+    user_data               = indent(12, local.user_data)
+    network_data            = indent(12, local.network_data)
   })
 }
 
