@@ -15,8 +15,8 @@ terraform {
 
 provider "kubernetes" {
   insecure    = "true"
-  token       = var.ocpvirt_token
-  host        = var.ocpvirt_host
+  token       = var.ocpvirt_token != "" ? var.ocpvirt_token : null
+  host        = var.ocpvirt_host != "" ? var.ocpvirt_host : null
   config_path = var.ocpvirt_token != "" && var.ocpvirt_host != "" ? null : "~/.kube/config"
   #   # config_path    = "~/.kube/config"
   #   # config_context = "default/api-ocpvirt-mop-ibm:6443/schabrolles"
@@ -25,7 +25,7 @@ provider "kubernetes" {
 provider "kubectl" {
   insecure         = "true"
   host             = var.ocpvirt_host != "" ? var.ocpvirt_host : null
-  token            = var.ocpvirt_token
+  token            = var.ocpvirt_token != "" ? var.ocpvirt_token : null
   load_config_file = var.ocpvirt_token == "" && var.ocpvirt_host == "" ? "true" : "false"
   config_path      = var.ocpvirt_host != "" && var.ocpvirt_host != "" ? null : "~/.kube/config"
   # config_context = "default/api-ocpvirt-mop-ibm:6443/schabrolles"

@@ -1,14 +1,3 @@
-# provider "kubectl" {
-#   host                   = var.eks_cluster_endpoint
-#   cluster_ca_certificate = base64decode(var.eks_cluster_ca)
-#   token                  = data.aws_eks_cluster_auth.main.token
-#   load_config_file       = false
-# }
-
-# rh_subscription:
-#   activation-key: HCS_RHEL
-#   org: 15478606
-
 locals {
   # User data for cloud-init configuration
   user_data = var.custom_user_data != "" ? var.custom_user_data : <<-EOF
@@ -100,7 +89,7 @@ resource "null_resource" "wait_for_vmi_IP" {
   ]
   provisioner "local-exec" {
     command = <<EOT
-    until kubectl get vmi ${var.vm_name} -n ${var.vm_namespace} -o json | jq -e '.status.interfaces[0].ipAddress != "" and (.status.interfaces[0].ipAddress | length) > 8'; do
+    oc login --token=${var.ocpvirt_token} --server=${var.ocpvirt_host} --insecure-skip-tls-verify && until oc get vmi ${var.vm_name} -n ${var.vm_namespace} -o json | jq -e '.status.interfaces[0].ipAddress != "" and (.status.interfaces[0].ipAddress | length) > 8'; do
       sleep 5
     done
     EOT
