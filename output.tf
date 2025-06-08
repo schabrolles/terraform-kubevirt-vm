@@ -32,3 +32,16 @@ output "vm_ip" {
   description = "The IP address of the virtual machine"
   value       = local.vm_ip
 }
+output "vm_admin_user" {
+  description = "The admin user for the virtual machine"
+  value       = var.admin_user 
+}
+output "vm_admin_password" {
+  description = "The password for the admin user of the virtual machine"
+  value       = var.cloud_user_password
+  sensitive   = true
+}
+output "vm_os_image" {
+  description = "The base image used for the virtual machine"
+  value       = "${var.base_image_namespace}/${var.base_image_name}"  
+}
