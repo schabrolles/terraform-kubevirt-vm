@@ -107,10 +107,16 @@ variable "network_binding" {
 
 ## Cloud-Init Configuration
 
-variable "ssh_public_key" {
-  description = "SSH public key to add to authorized_keys for the default user"
-  type        = string
-  default     = ""
+# variable "ssh_public_key" {
+#   description = "SSH public key to add to authorized_keys for the default user"
+#   type        = string
+#   default     = ""
+# }
+
+variable "authorized_keys" {
+  description = "List of SSH public keys to add to the authorized_keys file"
+  type        = list(string)
+  default     = []
 }
 
 variable "cloud_user_password" {

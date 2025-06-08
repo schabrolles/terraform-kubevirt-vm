@@ -11,7 +11,9 @@ chpasswd:
 ssh_pwauth: true
 %{endif~}
 ssh_authorized_keys:
-  - ${var.ssh_public_key}
+  %{~for key in var.authorized_keys~}
+  - ${key}
+  %{~endfor~}
 timezone: ${var.timezone}
 package_update: true
 package_upgrade: false
@@ -63,7 +65,6 @@ resource "kubectl_manifest" "kubevirt_vm" {
     interface_model         = var.interface_model
     interface_type          = var.interface_type
     network_binding         = var.network_binding
-    ssh_public_key          = var.ssh_public_key
     admin_user              = var.admin_user
     cloud_user_password     = var.cloud_user_password
     timezone                = var.timezone

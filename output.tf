@@ -20,6 +20,14 @@ locals {
   )
 }
 
+output "vm_namespace" {
+  description = "The namespace of the virtual machine"
+  value       = var.vm_namespace
+}
+output "vm_name" {
+  description = "The name of the virtual machine"
+  value       = var.vm_name
+}
 output "vm_ip" {
   description = "The IP address of the virtual machine"
   value       = local.vm_ip
